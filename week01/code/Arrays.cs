@@ -8,12 +8,17 @@ public static class Arrays
     /// <returns>array of doubles that are the multiples of the supplied number</returns>
     public static double[] MultiplesOf(double number, int length)
     {
-        // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
-
-        return []; // replace this return statement with your own
+        // Step 1: Create an empty array of doubles with the size equal to 'length'.
+        // Step 2: Use a for loop to iterate from 0 to length - 1.
+        // Step 3: For each iteration i, calculate the multiple as number * (i + 1).
+        // Step 4: Assign the calculated multiple to the array at index i.
+        // Step 5: After the loop ends, return the array containing all multiples.
+        var multiples = new double[length];
+        for (var i = 0; i < length; i++)
+        {
+            multiples[i] = number * (i + 1);
+        }
+        return multiples;
     }
 
     /// <summary>
@@ -25,9 +30,27 @@ public static class Arrays
     /// </summary>
     public static void RotateListRight(List<int> data, int amount)
     {
-        // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+        // Step 1: Determine the number of elements in the list (data.Count).
+        // Step 2: If amount is equal to the list size or 0, no rotation is needed; exit the function.
+        // Step 3: Create a new temporary list to hold the rotated elements.
+        // Step 4: Take the last 'amount' elements from the original list and add them first to the temporary list.
+        // Step 5: Take the first 'data.Count - amount' elements from the original list and append them to the temporary list.
+        // Step 6: Copy the elements from the temporary list back into the original list so that it is rotated in place.
+        var size = data.Count;
+        if (amount == size || amount == 0)
+            return;
+        var rotated = new List<int>(size);
+        for (var i = size - amount; i < size; i++)
+        {
+            rotated.Add(data[i]);
+        }
+        for (var i = 0; i < size - amount; i++)
+        {
+            rotated.Add(data[i]);
+        }
+        for (var i = 0; i < size; i++)
+        {
+            data[i] = rotated[i];
+        }
     }
 }
