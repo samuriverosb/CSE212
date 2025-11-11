@@ -1,21 +1,24 @@
-﻿/// <summary>
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+/// <summary>
 /// Maintain a Customer Service Queue.  Allows new customers to be 
 /// added and allows customers to be serviced.
 /// </summary>
 public class CustomerService {
     public static void Run() {
         // Example code to see what's in the customer service queue:
-        // var cs = new CustomerService(10);
-        // Console.WriteLine(cs);
+        var cs = new CustomerService(10);
+        Console.WriteLine(cs);
 
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Try to create a CustomerService with max size of -2
+        // Expected Result: The max size should default to 10
         Console.WriteLine("Test 1");
+        var cs1 = new CustomerService(-2);
+        Assert.AreEqual(10, cs1._maxSize);
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
