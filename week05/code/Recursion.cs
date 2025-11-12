@@ -14,8 +14,10 @@ public static class Recursion
     /// </summary>
     public static int SumSquaresRecursive(int n)
     {
-        // TODO Start Problem 1
-        return 0;
+        if (n <= 0)
+            return 0;
+        else
+            return n * n + SumSquaresRecursive(n - 1);
     }
 
     /// <summary>
@@ -39,7 +41,18 @@ public static class Recursion
     /// </summary>
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
-        // TODO Start Problem 2
+        if (word.Length == size)
+        {
+            results.Add(word);
+            return;
+        }
+
+        for (int i = 0; i < letters.Length; i++)
+        {
+            char letter = letters[i];
+            string remainingLetters = letters.Remove(i, 1);
+            PermutationsChoose(results, remainingLetters, size, word + letter);
+        }
     }
 
     /// <summary>
@@ -96,10 +109,18 @@ public static class Recursion
         if (s == 3)
             return 4;
 
-        // TODO Start Problem 3
-
-        // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        if (remember == null)
+        {
+            remember = new Dictionary<int, decimal>();
+        }
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
+        decimal ways = CountWaysToClimb(s - 1, remember) +
+                       CountWaysToClimb(s - 2, remember) +
+                       CountWaysToClimb(s - 3, remember);
+        remember[s] = ways;
         return ways;
     }
 
@@ -118,25 +139,70 @@ public static class Recursion
     /// </summary>
     public static void WildcardBinary(string pattern, List<string> results)
     {
-        // TODO Start Problem 4
+        int index = pattern.IndexOf('*');
+        if (index == -1)
+        {
+            results.Add(pattern);
+            return;
+        }
+
+        string patternWithZero = pattern.Substring(0, index) + '0' + pattern.Substring(index + 1);
+        string patternWithOne = pattern.Substring(0, index) + '1' + pattern.Substring(index + 1);
+
+        WildcardBinary(patternWithZero, results);
+        WildcardBinary(patternWithOne, results);
     }
 
     /// <summary>
     /// Use recursion to insert all paths that start at (0,0) and end at the
     /// 'end' square into the results list.
+    /// A maze is defined as an array of integer values. The array is defined for an n x n maze, the first n elements of the array represents the first row in the maze. The next n elements define the 2nd row and so on. You can assume that the maze will be square (same number of rows and columns). The values of the array define each maze position as:
+
+    ///     0 = Wall (You can't go through this)
+    ///     1 = Open Path (You can go through this)
+    ///     2 = End (You want to get to this point to win)
+
+    /// In the code, there are two sample mazes. Each maze shows 0, 1, or 2 in each box. The blue boxes are walls and the white boxes are path ways. The solution to each maze is highlighted in red. Note that the small maze has two possible solutions and the big maze has only one possible solution.
+    /// The IsEnd and the IsValidMove functions are already written for you. These functions assume that the first square in the maze is (0,0). These functions also assume that you can't leave the boundaries of the maze and that you can't visit the same square in the same path (no circles). The IsEnd will return true if the x and y coordinate represent the end of the maze. The IsValidMove will return true if the movement to x and y is within the maze boundaries, does not represent a wall, and is not someplace we have already been.
+
+    /// The currPath variable is a list of (x,y) tuples that represent the path we are currently on. If you add a new position to the path, make sure that you add the tuple to the list so that the IsValidMove function works properly.
+
+    /// The goal is to implement the SolveMaze function to insert all paths to the end square into the results list using recursion. When you find a path, then adding it to the list of results will be as simple as results.Add(currPath.AsString()). 
     /// </summary>
     public static void SolveMaze(List<string> results, Maze maze, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
     {
         // If this is the first time running the function, then we need
         // to initialize the currPath list.
-        if (currPath == null) {
+        if (currPath == null)
+        {
             currPath = new List<ValueTuple<int, int>>();
         }
-        
-        // currPath.Add((1,2)); // Use this syntax to add to the current path
 
-        // TODO Start Problem 5
-        // ADD CODE HERE
+        // currPath.Add((1, 2)); // Use this syntax to add to the current path
+        currPath.Add((x, y));
+
+        // Base case: check if we're at the end
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+            currPath.RemoveAt(currPath.Count - 1);
+            return;
+        }
+
+        int[,] directions = new int[,] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+
+        for (int i = 0; i < directions.GetLength(0); i++)
+        {
+            int newX = x + directions[i, 0];
+            int newY = y + directions[i, 1];
+
+            if (maze.IsValidMove(currPath, newX, newY))
+            {
+                SolveMaze(results, maze, newX, newY, currPath);
+            }
+        }
+
+        currPath.RemoveAt(currPath.Count - 1);
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
